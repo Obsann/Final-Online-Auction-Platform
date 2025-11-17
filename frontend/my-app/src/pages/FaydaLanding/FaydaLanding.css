@@ -1,0 +1,174 @@
+/* =========================== */
+/* Fayda Landing Page Styles   */
+/* =========================== */
+
+/* Main container */
+.fayda-landing-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(3, 2, 19, 0.05) 0%, rgba(233, 235, 239, 0.2) 100%);
+  background-size: 200% 200%;
+  animation: faydaGradientShift 15s ease infinite;
+}
+
+/* Gradient animation */
+@keyframes faydaGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Main card */
+.fayda-landing-card {
+  width: 100%;
+  max-width: 48rem;
+  border-width: 2px;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  animation: faydaSlideInUp 0.5s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 2rem;
+}
+
+/* Slide in up */
+@keyframes faydaSlideInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card hover */
+.fayda-landing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 30px -5px rgba(0,0,0,0.15), 0 15px 15px -5px rgba(0,0,0,0.06);
+}
+
+/* Icon container */
+.fayda-landing-icon-container {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+  background-color: rgba(3,2,19,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+/* Input field */
+.fayda-landing-input {
+  width: 100%;
+  height: 3.5rem;
+  font-size: 1.125rem;
+}
+
+/* Button */
+.fayda-landing-button {
+  width: 100%;
+  height: 3.5rem;
+  font-size: 1.125rem;
+}
+
+/* Eligibility banner */
+.fayda-eligibility-success {
+  background-color: rgba(34,197,94,0.1);
+  border: 2px solid rgb(34,197,94);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.dark .fayda-eligibility-success {
+  background-color: rgba(34,197,94,0.2);
+}
+
+/* Option cards grid */
+.fayda-option-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .fayda-option-cards {
+    grid-template-columns: repeat(2,1fr);
+    gap: 2.25rem;
+  }
+}
+
+/* Individual option card */
+.fayda-option-card {
+  border-width: 2px;
+  border-radius: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer;
+  transform: translateY(0);
+}
+
+/* Hover state for option card */
+.fayda-option-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 20px 25px rgba(0,0,0,0.15);
+  transform: translateY(-6px);
+}
+
+/* Active state for option card */
+.fayda-option-card:active {
+  transform: translateY(-2px);
+}
+
+/* Spinner */
+.fayda-loading-spinner {
+  animation: faydaSpin 1s linear infinite;
+  border-radius: 9999px;
+  height: 1.25rem;
+  width: 1.25rem;
+  border: 2px solid transparent;
+  border-bottom-color: white;
+  margin-right: 0.5rem;
+}
+
+@keyframes faydaSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Info section (FAN explanation) */
+.fayda-info-section {
+  background-color: rgba(243, 244, 246, 0.5);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.fayda-info-section h4 {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.fayda-info-section p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+
+/* Individual option card */
+.fayda-option-card {
+  border-width: 2px;
+  border-color: rgba(0,0,0,0.1); /* default border */
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer;
+  transform: translateY(0);
+}
+
+/* Hover state for option card */
+.fayda-option-card:hover {
+  border-color: var(--primary); /* change border to primary color */
+  box-shadow: 0 15px 20px -3px rgba(0,0,0,0.15), 0 8px 10px -2px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
+}
