@@ -9,12 +9,12 @@ import SellerDashboard from "./pages/Dashboard/SellerDashboard";
 import AdminDashboard from "./pages/Dashboard/AdminDashboard";
 import Login from "./pages/Login/Login";
 // import NotFound from "./pages/NotFound";
-import Landing, { LandingPage } from "./pages/LandingPage/Landing.jsx"
+import { LandingPage } from "./pages/LandingPage/Landing.jsx"
 import PlaceBidPage from "./pages/PlaceBidPage/PlaceBidPage.jsx";
 import UsersPage from "./pages/UsersPage/UsersPage.jsx";
 import PendingItemsPage from "./pages/PendingItemsPage/PendingItemsPage.jsx";
 import AuctionsPage from "./pages/Auctions/AuctionsPage.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.js";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Chat from "./pages/Chat/Chat.jsx";
 import FaydaLanding from "./pages/FaydaLanding/FaydaLanding.jsx";
 function App() {
@@ -25,8 +25,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/fayda" element={<FaydaLanding />} />
 
-        <Route path="/" element={<LandingPage/>} />
-<Route path="/chatbot" element={<Chat/>} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/chatbot" element={<Chat />} />
         <Route path="/buyer" element={<BuyerDashboard />} />
         <Route path="/buyer/bid/:auctionId" element={<PlaceBidPage />} />
         <Route path="/seller" element={<SellerDashboard />} />
@@ -36,7 +36,7 @@ function App() {
         <Route path="/admin/auctions" element={<AuctionsPage />} />
         <Route path="/place-bid/:auctionId" element={
           <ProtectedRoute>
-          <PlaceBidPage />
+            <PlaceBidPage />
           </ProtectedRoute>} />
 
 
