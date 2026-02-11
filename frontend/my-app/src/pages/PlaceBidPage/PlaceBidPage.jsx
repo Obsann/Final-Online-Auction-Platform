@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../utils/api";
 
 export default function PlaceBidPage() {
   const { auctionId } = useParams();
@@ -20,9 +20,7 @@ export default function PlaceBidPage() {
     }
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/auctions/${auctionId}`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      const res = await api.get(`/api/auctions/${auctionId}`);
       setAuction(res.data);
     } catch (err) {
       setMessage("Failed to fetch auction details.");
@@ -47,16 +45,10 @@ export default function PlaceBidPage() {
     setMessage(""); // clear previous messages
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/bids/place",
-        {
-          itemId: auction.itemId._id, // backend expects itemId
-          amount: Number(bidAmount),
-        },
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
+      await api.post("/api/bids/place", {
+        itemId: auction.itemId._id, // backend expects itemId
+        amount: Number(bidAmount),
+      });
 
       setMessage(`Bid of $${bidAmount} placed successfully!`);
       setBidAmount(""); // clear input

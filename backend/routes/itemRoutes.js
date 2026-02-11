@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const itemController = require('../controllers/itemController');
-const {authMiddleware} = require('../middleware/authMiddleware');
+const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
 const multer = require("multer");
 const path = require("path")
 
@@ -32,11 +32,11 @@ router.get('/:id', itemController.getItemById);
 router.patch('/:id', itemController.updateItem);
 
 
-// Approve an item
-router.patch('/:id/approve', itemController.approveItem);
+// Approve an item (admin only)
+router.patch('/:id/approve', adminMiddleware, itemController.approveItem);
 
-// Reject an item
-router.patch('/:id/reject', itemController.rejectItem);
+// Reject an item (admin only)
+router.patch('/:id/reject', adminMiddleware, itemController.rejectItem);
 
 // Delete an item
 router.delete('/:id', itemController.deleteItem);

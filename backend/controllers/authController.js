@@ -16,6 +16,9 @@ const register = async (req, res) => {
       return res.status(400).json({ error: "Bad Request", message: "Missing required fields" });
     }
 
+    // Prevent self-registration as admin
+    const safeRole = (role === "seller") ? "seller" : "buyer";
+
     // Validate bank statement file
     let bankStatement = null;
     if (req.file) {
@@ -38,7 +41,7 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      role,
+      role: safeRole,
       username,
       email,
       password: hashedPassword,

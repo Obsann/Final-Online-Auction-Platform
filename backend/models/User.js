@@ -27,35 +27,14 @@ const userSchema = new mongoose.Schema(
       enum: ['pending', 'approved', 'rejected'],
       default: "pending",
     },
-    // optional: admin role for system-level access
-    isAdmin: {
-      type: Boolean,
-      default: false,
+    // User role for access control
+    role: {
+      type: String,
+      enum: ['buyer', 'seller', 'admin'],
+      default: 'buyer',
     },
-    // Auctions this user created as seller
-    auctionsCreated: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Auction",
-      }
-    ],
-    //seller auction
-     sellerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-    // Auctions this user has placed bids on
-    bidsPlaced: [
-      {
-        auctionId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Auction",
-        },
-        amount: Number,
-        time: { type: Date, default: Date.now }
-      }
-    ],
+    // Removed unbounded arrays (auctionsCreated, bidsPlaced) for scalability
+    // Access these via queries on the Auction/Bid models instead.
   },
   {
     timestamps: true,

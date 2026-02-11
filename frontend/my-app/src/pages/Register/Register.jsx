@@ -16,17 +16,10 @@ export default function Register() {
   const [role, setRole] = useState("seller"); // default seller
   const [bankStatement, setBankStatement] = useState(null);
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [storedFaydaNumber, setStoredFaydaNumber] = useState("");
   const [passwordStrength, setPasswordStrength] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
-
-  // Load Fayda number from session storage if exists
-  useEffect(() => {
-    const faydaNumber = sessionStorage.getItem("fayda_alias_number");
-    if (faydaNumber) setStoredFaydaNumber(faydaNumber);
-  }, []);
 
   // Update password strength whenever password changes
   useEffect(() => {
@@ -71,7 +64,6 @@ export default function Register() {
       data.append("phone", phone);
       data.append("role", role);
       if (bankStatement) data.append("bankStatement", bankStatement);
-      if (storedFaydaNumber) data.append("faydaNumber", storedFaydaNumber);
 
       const response = await registerUser(data, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -82,7 +74,7 @@ export default function Register() {
       localStorage.setItem("token", response.token);
 
       const pendingBid = localStorage.getItem("pendingBidItem");
-      if (pendingBid && response.role === "bidder") {
+      if (pendingBid && response.role === "buyer") {
         navigate(`/buyer/bid/${JSON.parse(pendingBid)._id}`);
         localStorage.removeItem("pendingBidItem");
         return;
@@ -91,7 +83,7 @@ export default function Register() {
       // Redirect based on role
       if (response.role === "admin") navigate("/admin");
       else if (response.role === "seller") navigate("/seller");
-      else if (response.role === "bidder") navigate("/buyer");
+      else if (response.role === "buyer") navigate("/buyer");
       else throw new Error("Unknown role");
     } catch (err) {
       setError(err.message || "Registration failed");
@@ -105,12 +97,6 @@ export default function Register() {
           <h1 className="register-title">Create Account</h1>
           <p className="register-description">Sign up to get started</p>
         </div>
-
-        {storedFaydaNumber && (
-          <div className="verified-badge">
-            <strong>✓ Verified FAN Number</strong>
-          </div>
-        )}
 
         <form className="register-form" onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
@@ -214,7 +200,7 @@ export default function Register() {
               onChange={(e) => setRole(e.target.value)}
             >
               <option value="seller">Seller</option>
-              <option value="bidder">Bidder</option>
+              <option value="buyer">Buyer</option>
             </select>
           </div>
 

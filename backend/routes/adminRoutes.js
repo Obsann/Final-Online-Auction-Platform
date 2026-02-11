@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { getAllUsers, getPendingItems, getAllAuctions } = require("../controllers/adminController");
-const { adminMiddleware } = require("../middleware/authMiddleware");
+const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleware");
 
-// Admin routes (all protected)
-router.get("/users", adminMiddleware, getAllUsers);
-router.get("/items/pending", adminMiddleware,getPendingItems);
-router.get("/auctions", adminMiddleware, getAllAuctions);
+// Admin routes (all protected — authMiddleware sets req.user, adminMiddleware checks role)
+router.get("/users", authMiddleware, adminMiddleware, getAllUsers);
+router.get("/items/pending", authMiddleware, adminMiddleware, getPendingItems);
+router.get("/auctions", authMiddleware, adminMiddleware, getAllAuctions);
 
 module.exports = router;

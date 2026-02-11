@@ -16,29 +16,26 @@ import PendingItemsPage from "./pages/PendingItemsPage/PendingItemsPage.jsx";
 import AuctionsPage from "./pages/Auctions/AuctionsPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Chat from "./pages/Chat/Chat.jsx";
-import FaydaLanding from "./pages/FaydaLanding/FaydaLanding.jsx";
+// import FaydaLanding from "./pages/FaydaLanding/FaydaLanding.jsx";
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/fayda" element={<FaydaLanding />} />
 
         <Route path="/" element={<LandingPage />} />
         <Route path="/chatbot" element={<Chat />} />
-        <Route path="/buyer" element={<BuyerDashboard />} />
-        <Route path="/buyer/bid/:auctionId" element={<PlaceBidPage />} />
-        <Route path="/seller" element={<SellerDashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<UsersPage />} />
-        <Route path="/admin/pending-items" element={<PendingItemsPage />} />
-        <Route path="/admin/auctions" element={<AuctionsPage />} />
-        <Route path="/place-bid/:auctionId" element={
-          <ProtectedRoute>
-            <PlaceBidPage />
-          </ProtectedRoute>} />
 
+        {/* Protected Routes */}
+        <Route path="/buyer" element={<ProtectedRoute><BuyerDashboard /></ProtectedRoute>} />
+        <Route path="/buyer/bid/:auctionId" element={<ProtectedRoute><PlaceBidPage /></ProtectedRoute>} />
+        <Route path="/seller" element={<ProtectedRoute><SellerDashboard /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />
+        <Route path="/admin/pending-items" element={<ProtectedRoute><PendingItemsPage /></ProtectedRoute>} />
+        <Route path="/admin/auctions" element={<ProtectedRoute><AuctionsPage /></ProtectedRoute>} />
+        <Route path="/place-bid/:auctionId" element={<ProtectedRoute><PlaceBidPage /></ProtectedRoute>} />
 
       </Routes>
     </Router>

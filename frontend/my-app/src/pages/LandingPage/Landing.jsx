@@ -24,10 +24,10 @@ export function LandingPage() {
             <a href="#contact" className="nav-link">Contact</a>
           </div>
           <div className="nav-actions">
-            <button className="nav-button secondary" onClick={() => navigate("/fayda")}>
+            <button className="nav-button secondary" onClick={() => navigate("/login")}>
               Login
             </button>
-            <button className="nav-button primary" onClick={() => navigate("/fayda")}>
+            <button className="nav-button primary" onClick={() => navigate("/register")}>
               Register
             </button>
           </div>

@@ -35,34 +35,18 @@ async function sendApprovalEmail(toEmail, username) {
   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 }
 
-// Updated winner email with payment link
-async function sendWinnerEmail(toEmail, username, itemTitle, finalPrice, userToken) {
+// Updated winner email — no longer initiates payment directly (user does that from the frontend)
+async function sendWinnerEmail(toEmail, username, itemTitle, finalPrice) {
   const transporter = await getTransporter();
 
-  // 1. Initiate payment and get checkout URL
-  let checkoutUrl = '';
-  try {
-    const res = await axios.post(
-      'http://localhost:5000/api/payments/initiate',
-      {}, // no body needed
-      { headers: { Authorization: `Bearer ${userToken}` } }
-    );
-    checkoutUrl = res.data.checkoutUrl;
-  } catch (err) {
-    console.error('Error initiating payment:', err);
-    checkoutUrl = '#'; // fallback if payment initiation fails
-  }
-
-  // 2. Send email with payment link
   const info = await transporter.sendMail({
     from: '"Auction App" <no-reply@auctionapp.com>',
     to: toEmail,
     subject: `Congratulations! You won ${itemTitle}`,
-    text: `Hi ${username}, you are the winner of the auction for "${itemTitle}" with a bid of $${finalPrice}. Click this link to pay: ${checkoutUrl}`,
+    text: `Hi ${username}, you are the winner of the auction for "${itemTitle}" with a bid of $${finalPrice}. Log in to complete your payment.`,
     html: `<p>Hi <strong>${username}</strong>,</p>
            <p>You are the winner of the auction for "<strong>${itemTitle}</strong>" with a bid of <strong>$${finalPrice}</strong>.</p>
-           <p>Click the button below to initiate payment:</p>
-           <p><a href="${checkoutUrl}" style="padding:10px 20px; background-color:#4CAF50; color:white; text-decoration:none; border-radius:5px;">Pay Now</a></p>`
+           <p>Log in to your account to complete your payment.</p>`
   });
 
   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));

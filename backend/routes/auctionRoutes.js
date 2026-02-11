@@ -7,7 +7,7 @@ const {
   getMyBids,
   deleteAuction,
 } = require('../controllers/auctionController');
-const {authMiddleware} = require('../middleware/authMiddleware'); // fixed JWT auth
+const { authMiddleware } = require('../middleware/authMiddleware'); // fixed JWT auth
 
 const router = express.Router();
 
@@ -18,12 +18,18 @@ router.post('/', authMiddleware, createAuction);
 
 // @route   GET /api/auctions
 // @desc    Get all auctions
-// @access  Protected
+// @access  Public
 router.get('/', getAllAuctions);
+
+// @route   GET /api/auctions/my-bids
+// @desc    Get auctions the current user has bid on
+// @access  Protected
+// NOTE: Must be before /:id to avoid Express treating "my-bids" as an ID
+router.get('/my-bids', authMiddleware, getMyBids);
 
 // @route   GET /api/auctions/:id
 // @desc    Get auction by ID
-// @access  Protected
+// @access  Public
 router.get('/:id', getAuctionById);
 
 // @route   PATCH /api/auctions/:id
@@ -35,9 +41,5 @@ router.patch('/:id', authMiddleware, updateAuction);
 // @desc    Delete auction
 // @access  Protected
 router.delete('/:id', authMiddleware, deleteAuction);
-
-router.get("/my-bids" , authMiddleware, getMyBids
-)
-router.get("/:id" , authMiddleware, getAllAuctions)
 
 module.exports = router;

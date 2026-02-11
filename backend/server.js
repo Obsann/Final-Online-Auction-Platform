@@ -7,6 +7,12 @@ dotenv.config(); // Reads .env file
 // 2. Import dependencies
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const winston = require('winston'); // For logging
+
 const connectDB = require('./config/db'); // Your db.js file
 const itemRoutes = require('./routes/itemRoutes'); // Item API routes
 const auctionRoutes = require('./routes/auctionRoutes'); // Auction API routes
@@ -20,14 +26,33 @@ const http = require('http')
 // 3. Initialize Express app
 const app = express();
 
+// --- Security Middleware ---
+
+// Set security HTTP headers
+app.use(helmet());
+
+// Limit requests from same API
+const limiter = rateLimit({
+  max: 100, // Limit each IP to 100 requests per windowMs
+  windowMs: 60 * 60 * 1000, // 1 hour
+  message: 'Too many requests from this IP, please try again in an hour!'
+});
+app.use('/api', limiter);
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
+
 // 4. Middleware
 app.use(cors({
-  origin: "http://localhost:3000", // React dev server
-  credentials: true, // if you want cookies
+  origin: process.env.CLIENT_URL || "http://localhost:3000", // Allow config via env
+  credentials: true,
 }));
-app.use(express.json()); // Parse JSON request bodies
+app.use(express.json({ limit: '10kb' })); // Body limit is checking against DoS
 
-// 5. Optional: simple request logger
+// 5. Optional: simple request logger (replaced with Winston later if needed, keeping simple for now)
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
@@ -44,8 +69,8 @@ app.use("/api/payments", require("./routes/paymentRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/test", require("./routes/testRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
-app.use('/api/admin' , require("./routes/adminRoutes"))
-app.use('/api/notifications' , notificationsRoute);
+app.use('/api/admin', require("./routes/adminRoutes"))
+app.use('/api/notifications', notificationsRoute);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 setInterval(checkAuctions, 60 * 1000);
 

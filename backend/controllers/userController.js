@@ -2,19 +2,19 @@
 // * Handles user management actions: fetching users, updating, deleting. It does not handle password hashing or login—that’s in authController.
 
 const User = require('../models/User'); // Import the User model
-const {sendApprovalEmail} = require('../services/mailer')
+const { sendApprovalEmail } = require('../services/mailer')
 
 // Get all users (for admin)
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password').sort({ username: 1 }); 
+    const users = await User.find().select('-password').sort({ username: 1 });
     // Fetch all users, exclude passwords, sort alphabetically by username
     res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Error fetching users',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -23,7 +23,7 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id).select('-password'); 
+    const user = await User.findById(id).select('-password');
     // Exclude password from returned data
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -31,9 +31,9 @@ exports.getUserById = async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Error fetching user',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -44,12 +44,18 @@ exports.updateUser = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
-    // Prevent updating password here; password changes go through authController
-    if (updates.password) delete updates.password;
+    // Whitelist allowed fields to prevent privilege escalation
+    const allowedFields = ['username', 'email', 'phone', 'bankStatement'];
+    const safeUpdates = {};
+    for (const key of allowedFields) {
+      if (updates[key] !== undefined) {
+        safeUpdates[key] = updates[key];
+      }
+    }
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { $set: updates },
+      { $set: safeUpdates },
       { new: true }
     ).select('-password'); // Exclude password in response
 
@@ -63,9 +69,9 @@ exports.updateUser = async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating user:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Error updating user',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -81,9 +87,9 @@ exports.deleteUser = async (req, res) => {
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Error deleting user',
-      error: error.message 
+      error: error.message
     });
   }
 };

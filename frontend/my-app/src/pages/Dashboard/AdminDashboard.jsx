@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, Package, Gavel, LogOut } from "lucide-react"; 
+import { Users, Package, Gavel, LogOut } from "lucide-react";
+import api from "../../utils/api";
 import "./Admin.css";
 
 function AdminDashboard() {
@@ -11,23 +12,16 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
     const fetchData = async () => {
       try {
-        const headers = { Authorization: `Bearer ${token}` };
+        const usersRes = await api.get("/api/users");
+        setUsersCount(usersRes.data.length);
 
-        const usersRes = await fetch("http://localhost:5000/api/users", { headers });
-        const usersData = await usersRes.json();
-        setUsersCount(usersData.length);
+        const itemsRes = await api.get("/api/items?status=pending");
+        setPendingItemsCount(itemsRes.data.length);
 
-        const itemsRes = await fetch("http://localhost:5000/api/items?status=pending", { headers });
-        const itemsData = await itemsRes.json();
-        setPendingItemsCount(itemsData.length);
-
-        const auctionsRes = await fetch("http://localhost:5000/api/auctions", { headers });
-        const auctionsData = await auctionsRes.json();
-        setAuctionsCount(auctionsData.length);
+        const auctionsRes = await api.get("/api/auctions");
+        setAuctionsCount(auctionsRes.data.length);
 
       } catch (err) {
         console.error("Error fetching admin dashboard data:", err);

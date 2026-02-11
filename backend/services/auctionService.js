@@ -71,7 +71,7 @@ async function getAllAuctions() {
             const highestBid = topBid ? topBid.amount : 0;
             const highestBidder = topBid ? topBid.bidderId : null;
 
-            return { 
+            return {
                 ...auction.toObject(),
                 highestBid,
                 highestBidder
@@ -119,13 +119,13 @@ async function deleteAuction(id) {
 }
 
 async function getAuctionsByBidder(userId) {
-  // Get all bids by the user
-  const bids = await Bid.find({ bidder: userId }).populate("auctionId");
+    // Get all bids by the user
+    const bids = await Bid.find({ bidderId: userId }).populate("auctionId");
 
-  // Remove duplicates if the user has multiple bids on the same auction
-  const auctions = [...new Map(bids.map(b => [b.auctionId._id.toString(), b.auctionId])).values()];
+    // Remove duplicates if the user has multiple bids on the same auction
+    const auctions = [...new Map(bids.map(b => [b.auctionId._id.toString(), b.auctionId])).values()];
 
-  return auctions; // just return the array
+    return auctions; // just return the array
 }
 
 module.exports = {

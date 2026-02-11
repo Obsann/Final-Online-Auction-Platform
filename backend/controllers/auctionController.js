@@ -2,6 +2,7 @@
 const auctionService = require('../services/auctionService');
 const Auction = require('../models/AuctionsModel')
 const Item = require("../models/itemsModel")
+const Bid = require("../models/bidModel")
 
 // Create a new auction
 exports.createAuction = async (req, res) => {
@@ -30,7 +31,7 @@ exports.getAuctionById = async (req, res) => {
   try {
     const auction = await Auction.findById(req.params.id)
       .populate("itemId")
-      // .populate("highestBidder");
+    // .populate("highestBidder");
     if (!auction) return res.status(404).json({ message: "Auction not found" });
     res.json(auction);
   } catch (err) {
@@ -53,7 +54,7 @@ exports.updateAuction = async (req, res) => {
 
 exports.getMyBids = async (req, res) => {
   try {
-    const userId = req.user._id; // from authMiddleware
+    const userId = req.user.id; // from authMiddleware (decoded JWT has 'id', not '_id')
 
     // Get all bids by this user, populate auction info
     const bids = await Bid.find({ bidderId: userId }).populate("auctionId");
